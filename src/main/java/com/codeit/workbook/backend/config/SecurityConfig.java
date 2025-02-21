@@ -37,6 +37,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/login", "/api/register", "/h2-console/**").permitAll()  // 로그인, 회원가입, H2 콘솔 경로 허용
+                .antMatchers("/quizzes/bulk").permitAll()  // /quizzes/bulk 경로도 인증 없이 허용
+                .antMatchers("/quizzes").permitAll()
+                .antMatchers("/quiz").permitAll()
+                .antMatchers("/quizzes/user/{userId}").permitAll()
+                .antMatchers("/quizzes/user/{userId}/subject/{subject}/professor/{professor}").permitAll()
                 .anyRequest().authenticated() // 그 외 요청은 인증 필요
                 .and()
                 .formLogin()
@@ -56,6 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // H2 Console에 대한 추가 설정 (iframe 허용)
         http.headers().frameOptions().sameOrigin();  // H2 콘솔에서 iframe을 허용
     }
+
 
     // CORS 설정을 위한 CorsConfigurationSource Bean 등록
     @Bean

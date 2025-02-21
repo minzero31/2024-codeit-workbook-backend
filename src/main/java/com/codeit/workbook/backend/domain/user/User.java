@@ -1,5 +1,7 @@
 package com.codeit.workbook.backend.domain.user;
 
+import com.codeit.workbook.backend.domain.quiz.Quiz;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,8 +11,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,6 +35,10 @@ public class User implements UserDetails {
 
     @Column(name = "password")
     private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference  // 순환 참조를 방지하기 위해 추가
+    private List<Quiz> quizzes = new ArrayList<>();
 
     @Builder
     public User(String userId, String userName, String password) {
@@ -53,8 +61,6 @@ public class User implements UserDetails {
     public String getPassword() {
         return password;
     }
-
-
 
     @Override
     public boolean isAccountNonExpired() { return true; }
